@@ -1,5 +1,5 @@
 use std::fs::File;
-use std::io::{BufReader, prelude::*};
+use std::io::{prelude::*, BufReader};
 
 fn elf_capacity_list(filename: &str) -> Result<Vec<i32>, std::io::Error> {
     let file = File::open(filename)?;
@@ -20,8 +20,8 @@ fn elf_capacity_list(filename: &str) -> Result<Vec<i32>, std::io::Error> {
 
 fn main() {
     let mut v = elf_capacity_list("input1.txt").unwrap();
-    v.sort();
+    v.sort_unstable();
     println!("ex1: {}", v.last().unwrap());
-    let last3sum: i32 = (&v[v.len()-3..]).iter().sum();
+    let last3sum: i32 = (v[v.len() - 3..]).iter().sum();
     println!("ex2: {}", last3sum);
 }
