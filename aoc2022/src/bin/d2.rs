@@ -80,6 +80,6 @@ fn compute_score_ex2(filename: &str) -> io::Result<u32> {
 }
 
 fn main() {
-    println!("ex1: {}", compute_score_ex1("input1.txt").unwrap());
-    println!("ex2: {}", compute_score_ex2("input1.txt").unwrap());
+    println!("ex1: {}", compute_score_ex1("inputs/d2_1.txt").unwrap());
+    println!("ex2: {}", compute_score_ex2("inputs/d2_1.txt").unwrap());
 }

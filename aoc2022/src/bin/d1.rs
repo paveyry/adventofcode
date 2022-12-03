@@ -19,7 +19,7 @@ fn elf_capacity_list(filename: &str) -> Result<Vec<i32>, std::io::Error> {
 }
 
 fn main() {
-    let mut v = elf_capacity_list("input1.txt").unwrap();
+    let mut v = elf_capacity_list("inputs/d1_1.txt").unwrap();
     v.sort_unstable();
     println!("ex1: {}", v.last().unwrap());
     let last3sum: i32 = (v[v.len() - 3..]).iter().sum();

@@ -65,6 +65,6 @@ fn ex1(filename: &str) -> io::Result<u32> {
 }
 
 fn main() {
-    println!("ex1: {}", ex1("input1.txt").unwrap());
-    println!("ex2: {}", ex2("input1.txt").unwrap());
+    println!("ex1: {}", ex1("inputs/d3_1.txt").unwrap());
+    println!("ex2: {}", ex2("inputs/d3_1.txt").unwrap());
 }
