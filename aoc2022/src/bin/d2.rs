@@ -1,6 +1,6 @@
 use std::fs::File;
 use std::io;
-use std::io::{BufReader, prelude::*};
+use std::io::{prelude::*, BufReader};
 
 #[derive(PartialEq, Copy, Clone)]
 enum Move {
@@ -15,7 +15,7 @@ impl From<&str> for Move {
             "A" | "X" => Move::Rock,
             "B" | "Y" => Move::Paper,
             "C" | "Z" => Move::Scissors,
-            _ => panic!()
+            _ => panic!(),
         }
     }
 }
@@ -35,9 +35,27 @@ fn move_from_outcome(elf_move: Move, outcome: &str) -> Move {
         return elf_move;
     }
     match elf_move {
-        Move::Rock => if outcome == "X" { Move::Scissors } else { Move::Paper }
-        Move::Paper => if outcome == "X" { Move::Rock } else { Move::Scissors }
-        Move::Scissors => if outcome == "X" { Move::Paper } else { Move::Rock }
+        Move::Rock => {
+            if outcome == "X" {
+                Move::Scissors
+            } else {
+                Move::Paper
+            }
+        }
+        Move::Paper => {
+            if outcome == "X" {
+                Move::Rock
+            } else {
+                Move::Scissors
+            }
+        }
+        Move::Scissors => {
+            if outcome == "X" {
+                Move::Paper
+            } else {
+                Move::Rock
+            }
+        }
     }
 }
 
@@ -46,9 +64,27 @@ fn single_match_score(elf_move: Move, player_move: Move) -> u32 {
         return 3 + u32::from(player_move);
     }
     let score = match elf_move {
-        Move::Rock => if let Move::Paper = player_move { 6 } else { 0 }
-        Move::Paper => if let Move::Scissors = player_move { 6 } else { 0 }
-        Move::Scissors => if let Move::Rock = player_move { 6 } else { 0 }
+        Move::Rock => {
+            if let Move::Paper = player_move {
+                6
+            } else {
+                0
+            }
+        }
+        Move::Paper => {
+            if let Move::Scissors = player_move {
+                6
+            } else {
+                0
+            }
+        }
+        Move::Scissors => {
+            if let Move::Rock = player_move {
+                6
+            } else {
+                0
+            }
+        }
     };
     score + u32::from(player_move)
 }
@@ -74,7 +110,7 @@ fn compute_score_ex2(filename: &str) -> io::Result<u32> {
         let move_strs: Vec<String> = line?.split_whitespace().map(str::to_string).collect();
         let elf_move: Move = move_strs[0].as_str().into();
         let outcome = move_strs[1].as_str();
-        total_score +=  single_match_score(elf_move, move_from_outcome(elf_move, outcome));
+        total_score += single_match_score(elf_move, move_from_outcome(elf_move, outcome));
     }
     Ok(total_score)
 }
