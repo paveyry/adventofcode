@@ -6,40 +6,22 @@ use std::io::{prelude::*, BufReader};
 fn is_start_of_packet(arr: &[u8]) -> bool {
     let mut s = HashSet::new();
     for c in arr {
-        match s.get(c) {
-            Some(_) => {
-                return false;
-            }
-            None => {
-                s.insert(c);
-            }
+        if s.contains(c) {
+            return false;
         }
+        s.insert(c);
     }
-    return true;
+    true
 }
 
-fn ex2(filename: &str) -> io::Result<usize> {
+fn ex(filename: &str, size: usize) -> io::Result<usize> {
     let file = File::open(filename)?;
     let reader = BufReader::new(file);
-    let mut rolling_window = [0u8; 14];
+    let mut rolling_window = vec![0u8; size];
     // we just assume this is all ascii
     for (i, c) in reader.bytes().enumerate() {
-        rolling_window[i % 14] = c?;
-        if i >= 13 && is_start_of_packet(&rolling_window) {
-            return Ok(i + 1);
-        }
-    }
-    Ok(0)
-}
-
-fn ex1(filename: &str) -> io::Result<usize> {
-    let file = File::open(filename)?;
-    let reader = BufReader::new(file);
-    let mut rolling_window = [0u8; 4];
-    // we just assume this is all ascii
-    for (i, c) in reader.bytes().enumerate() {
-        rolling_window[i % 4] = c?;
-        if i >= 3 && is_start_of_packet(&rolling_window) {
+        rolling_window[i % size] = c?;
+        if i >= size-1 && is_start_of_packet(&rolling_window) {
             return Ok(i + 1);
         }
     }
@@ -47,6 +29,6 @@ fn ex1(filename: &str) -> io::Result<usize> {
 }
 
 fn main() {
-    println!("ex1: {}", ex1("inputs/d6_1.txt").unwrap());
-    println!("ex2: {}", ex2("inputs/d6_1.txt").unwrap());
+    println!("ex1: {}", ex("inputs/d6_1.txt", 4).unwrap());
+    println!("ex2: {}", ex("inputs/d6_1.txt", 14).unwrap());
 }
