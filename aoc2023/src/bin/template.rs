@@ -1,6 +1,6 @@
+use std::fs::File;
 use std::io;
 use std::io::BufReader;
-use std::fs::File;
 
 fn ex1(filename: &str) -> io::Result<u32> {
     let file = File::open(filename)?;

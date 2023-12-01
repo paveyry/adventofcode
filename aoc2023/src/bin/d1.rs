@@ -6,18 +6,17 @@ use anyhow::{Error, Result};
 fn ex1(file: &str) -> Result<u32> {
     let mut sum = 0;
     for l in file.lines() {
-
         let u1 = l
             .chars()
             .find(|c| c.is_numeric())
-            .unwrap()
+            .ok_or_else(|| Error::msg("missing number"))?
             .to_digit(10)
             .ok_or_else(|| Error::msg("bad digit"))?;
         let u2 = l
             .chars()
             .rev()
             .find(|c| c.is_numeric())
-            .unwrap()
+            .ok_or_else(|| Error::msg("missing number"))?
             .to_digit(10)
             .ok_or_else(|| Error::msg("bad digit"))?;
 
@@ -29,18 +28,17 @@ fn ex1(file: &str) -> Result<u32> {
 fn ex2(file: &str) -> Result<u32> {
     let mut sum = 0;
     for l in file.lines() {
-
         let u1 = l
             .chars()
             .enumerate()
             .find_map(|(i, c)| num_at_pos(&l, i, c))
-            .unwrap();
+            .ok_or_else(|| Error::msg("missing number"))?;
         let u2 = l
             .chars()
             .rev()
             .enumerate()
             .find_map(|(i, c)| num_at_pos(&l, l.len() - 1 - i, c))
-            .unwrap();
+            .ok_or_else(|| Error::msg("missing number"))?;
         sum += u1 * 10 + u2;
     }
     Ok(sum)
