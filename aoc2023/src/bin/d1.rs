@@ -36,13 +36,13 @@ fn ex2(filename: &str) -> Result<u32> {
         let mut num_str = String::new();
         
         for (i, c) in l.chars().enumerate() {
-            if let Some(num) = num_at_pos(&l, i, c)? {
+            if let Some(num) = num_at_pos(&l, i, c) {
                 num_str += num.to_string().as_str();
                 break
             }
         }
         for (i, c) in l.chars().rev().enumerate() {
-            if let Some(num) = num_at_pos(&l, l.len()-1-i, c)? {
+            if let Some(num) = num_at_pos(&l, l.len()-1-i, c) {
                 num_str += num.to_string().as_str();
                 break
             }
@@ -52,36 +52,36 @@ fn ex2(filename: &str) -> Result<u32> {
     Ok(sum)
 }
 
-fn num_at_pos(s: &str, pos: usize, c: char) -> Result<Option<u32>> {
+fn num_at_pos(s: &str, pos: usize, c: char) -> Option<u32> {
     if c.is_numeric() {
-        return Ok(Some(c.to_digit(10).ok_or_else(|| Error::msg("bad digit"))?));
+        return c.to_digit(10);
     }
     if pos >= 2 {
         match &s[pos-2..=pos] {
-            "one" => { return Ok(Some(1)); },
-            "two" => { return Ok(Some(2)); },
-            "six" => { return Ok(Some(6)); },
+            "one" => { return Some(1); },
+            "two" => { return Some(2); },
+            "six" => { return Some(6); },
             _ => {},
         }
     }
     if pos >= 3 {
         match &s[pos-3..=pos] {
-            "four" => { return Ok(Some(4)); },
-            "five" => { return Ok(Some(5)); },
-            "nine" => { return Ok(Some(9)); },
+            "four" => { return Some(4); },
+            "five" => { return Some(5); },
+            "nine" => { return Some(9); },
             _ => {},
         }
     }
     if pos >= 4 {
         match &s[pos-4..=pos] {
-            "three" => { return Ok(Some(3)); },
-            "seven" => { return Ok(Some(7)); },
-            "eight" => { return Ok(Some(8)); },
-            "nine" => { return Ok(Some(9)); },
-            _ => { return Ok(None); },
+            "three" => { return Some(3); },
+            "seven" => { return Some(7); },
+            "eight" => { return Some(8); },
+            "nine" => { return Some(9); },
+            _ => { return None; },
         }
     }
-    Ok(None)
+    None
 }
 
 fn main() {
