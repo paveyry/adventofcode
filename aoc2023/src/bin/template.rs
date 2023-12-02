@@ -1,20 +1,29 @@
-use std::fs::File;
-use std::io;
-use std::io::BufReader;
+use std::fs;
+use std::time::Instant;
 
-fn ex1(filename: &str) -> io::Result<u32> {
-    let file = File::open(filename)?;
-    let reader = BufReader::new(file);
+use anyhow::{Error, Result};
+
+fn ex1(file: &str) -> Result<u32> {
     Ok(0)
 }
 
-fn ex2(filename: &str) -> io::Result<u32> {
-    let file = File::open(filename)?;
-    let reader = BufReader::new(file);
+fn ex2(file: &str) -> Result<u32> {
     Ok(0)
 }
 
 fn main() {
-    println!("ex1: {}", ex1("inputs/dX_1.txt").unwrap());
-    println!("ex2: {}", ex2("inputs/d3X_1.txt").unwrap());
+    let file = fs::read_to_string("./inputs/dX_X.txt").unwrap();
+
+    let start = Instant::now();
+    let res_ex1 = ex1(&file);
+    let duration = start.elapsed();
+    println!("ex1: {} (computed in {:?})", res_ex1.unwrap(), duration);
+
+    let start = Instant::now();
+    let res_ex2 = ex2(&file);
+    let duration = start.elapsed();
+    println!("ex2: {} (computed in {:?})", res_ex2.unwrap(), duration);
 }
+
+#[cfg(test)]
+mod tests {}
