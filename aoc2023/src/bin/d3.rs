@@ -1,6 +1,6 @@
 use std::cmp::{max, min};
+use std::collections::{HashMap, HashSet};
 use std::fs;
-use std::collections::{HashSet, HashMap};
 use std::time::Instant;
 
 use anyhow::{Error, Result};
@@ -60,11 +60,16 @@ fn ex1(file: &str) -> Result<u32> {
     Ok(sum)
 }
 
-fn count_neighbour_nums(nums_map: &HashMap<(usize,usize), u32>, x: usize, y: usize, neighbours: &mut HashSet<u32>) {
+fn count_neighbour_nums(
+    nums_map: &HashMap<(usize, usize), u32>,
+    x: usize,
+    y: usize,
+    neighbours: &mut HashSet<u32>,
+) {
     let min_x = max(x as isize - 1, 0) as usize;
     let min_y = max(y as isize - 1, 0) as usize;
-    for i in min_x..=x+1 {
-        for j in min_y..=y+1 {
+    for i in min_x..=x + 1 {
+        for j in min_y..=y + 1 {
             if let Some(n) = nums_map.get(&(i, j)) {
                 neighbours.insert(*n);
             }
@@ -73,9 +78,9 @@ fn count_neighbour_nums(nums_map: &HashMap<(usize,usize), u32>, x: usize, y: usi
 }
 
 fn ex2(file: &str) -> Result<u32> {
-    let mut nums_map: HashMap<(usize,usize), u32> = HashMap::new();
+    let mut nums_map: HashMap<(usize, usize), u32> = HashMap::new();
     let mut nums_values_map: HashMap<u32, u32> = HashMap::new();
-    let mut syms_set: HashSet<(usize,usize)> = HashSet::new();
+    let mut syms_set: HashSet<(usize, usize)> = HashSet::new();
     let mut cur_num_id = 0;
     for (i, line) in file.lines().enumerate() {
         let mut current_num = 0u32;
@@ -108,7 +113,10 @@ fn ex2(file: &str) -> Result<u32> {
         neighbours.clear();
         count_neighbour_nums(&nums_map, i, j, &mut neighbours);
         if neighbours.len() == 2 {
-            sum += neighbours.iter().map(|n| nums_values_map.get(n).unwrap()).product::<u32>();
+            sum += neighbours
+                .iter()
+                .map(|n| nums_values_map.get(n).unwrap())
+                .product::<u32>();
         }
     }
     Ok(sum)
