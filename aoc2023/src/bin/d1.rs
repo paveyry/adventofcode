@@ -111,3 +111,29 @@ fn main() {
     let duration = start.elapsed();
     println!("ex2: {} (computed in {:?})", res_ex2.unwrap(), duration);
 }
+
+#[cfg(test)]
+mod tests {
+    use super::{ex1, ex2};
+
+    #[test]
+    fn test_ex1() {
+        let example = "1abc2
+pqr3stu8vwx
+a1b2c3d4e5f
+treb7uchet";
+        assert_eq!(142, ex1(example).unwrap());
+    }
+
+    #[test]
+    fn test_ex2() {
+        let example = "two1nine
+eightwothree
+abcone2threexyz
+xtwone3four
+4nineeightseven2
+zoneight234
+7pqrstsixteen";
+        assert_eq!(281, ex2(example).unwrap());
+    }
+}
