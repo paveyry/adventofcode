@@ -9,7 +9,7 @@ fn has_neighbour_sym(arr: &Vec<&str>, x: usize, y: usize) -> bool {
     let min_x = max(x as isize - 1, 0);
     let min_y = max(y as isize - 1, 0);
     let max_x = min(x as isize + 1, arr.len() as isize - 1);
-    let max_y = min(y as isize + 1, arr.get(0).unwrap().len() as isize - 1);
+    let max_y = min(y as isize + 1, arr.first().unwrap().len() as isize - 1);
     for i in min_x..=max_x {
         for j in min_y..=max_y {
             let c = arr

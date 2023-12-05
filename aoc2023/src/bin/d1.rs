@@ -31,13 +31,13 @@ fn ex2(file: &str) -> Result<u32> {
         let u1 = l
             .chars()
             .enumerate()
-            .find_map(|(i, c)| num_at_pos(&l, i, c))
+            .find_map(|(i, c)| num_at_pos(l, i, c))
             .ok_or_else(|| Error::msg("missing number"))?;
         let u2 = l
             .chars()
             .rev()
             .enumerate()
-            .find_map(|(i, c)| num_at_pos(&l, l.len() - 1 - i, c))
+            .find_map(|(i, c)| num_at_pos(l, l.len() - 1 - i, c))
             .ok_or_else(|| Error::msg("missing number"))?;
         sum += u1 * 10 + u2;
     }

@@ -24,7 +24,7 @@ fn ex1(file: &str) -> Result<u32> {
 
         for s in sets {
             for e in s.split(", ") {
-                let mut entry_info = e.split(" ");
+                let mut entry_info = e.split(' ');
                 let num = entry_info
                     .next()
                     .ok_or_else(|| Error::msg("failed to get color num"))?
@@ -47,7 +47,7 @@ fn ex1(file: &str) -> Result<u32> {
         }
         if set_valid {
             let game_id = game_id_iter
-                .split(" ")
+                .split(' ')
                 .nth(1)
                 .ok_or_else(|| Error::msg("failed to get game id num"))?
                 .parse::<u32>()?;
@@ -74,7 +74,7 @@ fn ex2(file: &str) -> Result<u32> {
 
         for s in sets {
             for e in s.split(", ") {
-                let mut entry_info = e.split(" ");
+                let mut entry_info = e.split(' ');
                 let num = entry_info
                     .next()
                     .ok_or_else(|| Error::msg("failed to get color num"))?

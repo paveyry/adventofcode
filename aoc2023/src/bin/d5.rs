@@ -93,13 +93,13 @@ fn ex2(file: &str) -> Result<u64> {
             let mut smallest_intersection = u64::MAX;
             for m in maps.iter() {
                 if let Some((k, val)) = m.get_key_value(&v) {
-                    let range_size = k.end()+1-k.start();
+                    let range_size = k.end() + 1 - k.start();
                     if range_size < smallest_intersection {
                         // find the smallest range containing seed
                         // all next seed values until the end of that shortest range
                         // will be the result for this seed value + 1, 2, 3 etc.
                         // so they can be skipped
-                        smallest_intersection = k.end()+1-v;
+                        smallest_intersection = k.end() + 1 - v;
                     }
                     v = *val + (v - k.start());
                 }
@@ -107,7 +107,7 @@ fn ex2(file: &str) -> Result<u64> {
             if v < min {
                 min = v;
             }
-            
+
             seed += if smallest_intersection != u64::MAX {
                 smallest_intersection
             } else {

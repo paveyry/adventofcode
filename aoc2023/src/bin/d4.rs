@@ -50,9 +50,11 @@ fn ex2(file: &str) -> Result<u32> {
         total += owned;
         let c = scores_per_line[i];
         while owned > 0 {
-            for j in i + 1..=i + c as usize {
-                owned_cards[j] += 1;
-            }
+            owned_cards
+                .iter_mut()
+                .take(i + c as usize + 1)
+                .skip(i + 1)
+                .for_each(|j| *j += 1);
             owned -= 1;
         }
     }
