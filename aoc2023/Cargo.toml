@@ -7,3 +7,5 @@ edition = "2021"
 
 [dependencies]
 anyhow = "1.0.75"
+rangemap = "1.4.0"
+itertools = "0.12.0"
