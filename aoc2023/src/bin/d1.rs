@@ -114,6 +114,8 @@ fn main() {
 
 #[cfg(test)]
 mod tests {
+    use std::fs;
+
     use super::{ex1, ex2};
 
     #[test]
@@ -135,5 +137,12 @@ xtwone3four
 zoneight234
 7pqrstsixteen";
         assert_eq!(281, ex2(example).unwrap());
+    }
+
+    #[test]
+    fn test_file() {
+        let file = fs::read_to_string("./inputs/d1_1.txt").unwrap();
+        assert_eq!(54388, ex1(&file).unwrap());
+        assert_eq!(53515, ex2(&file).unwrap());
     }
 }

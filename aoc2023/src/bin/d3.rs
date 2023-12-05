@@ -138,6 +138,8 @@ fn main() {
 
 #[cfg(test)]
 mod tests {
+    use std::fs;
+
     use super::{ex1, ex2};
 
     #[test]
@@ -154,5 +156,12 @@ mod tests {
 .664.598..";
         assert_eq!(4361, ex1(example).unwrap());
         assert_eq!(467835, ex2(example).unwrap());
+    }
+
+    #[test]
+    fn test_file() {
+        let file = fs::read_to_string("./inputs/d3_1.txt").unwrap();
+        assert_eq!(532428, ex1(&file).unwrap());
+        assert_eq!(84051670, ex2(&file).unwrap());
     }
 }

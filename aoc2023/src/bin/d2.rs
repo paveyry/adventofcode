@@ -126,6 +126,8 @@ fn main() {
 
 #[cfg(test)]
 mod tests {
+    use std::fs;
+
     use super::{ex1, ex2};
 
     #[test]
@@ -137,5 +139,12 @@ Game 4: 1 green, 3 red, 6 blue; 3 green, 6 red; 3 green, 15 blue, 14 red
 Game 5: 6 red, 1 blue, 3 green; 2 blue, 1 red, 2 green";
         assert_eq!(8, ex1(example).unwrap());
         assert_eq!(2286, ex2(example).unwrap());
+    }
+
+    #[test]
+    fn test_file() {
+        let file = fs::read_to_string("./inputs/d2_1.txt").unwrap();
+        assert_eq!(2278, ex1(&file).unwrap());
+        assert_eq!(67953, ex2(&file).unwrap());
     }
 }

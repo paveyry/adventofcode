@@ -90,4 +90,11 @@ Card 6: 31 18 13 56 72 | 74 77 10 23 35 67 36 11
         assert_eq!(13, ex1(input).unwrap());
         assert_eq!(30, ex2(input).unwrap());
     }
+
+    #[test]
+    fn test_file() {
+        let file = fs::read_to_string("./inputs/d4_1.txt").unwrap();
+        assert_eq!(25571, ex1(&file).unwrap());
+        assert_eq!(8805731, ex2(&file).unwrap());
+    }
 }

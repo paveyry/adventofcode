@@ -173,4 +173,11 @@ humidity-to-location map:
         assert_eq!(35, ex1(input).unwrap());
         assert_eq!(46, ex2(input).unwrap());
     }
+
+    #[test]
+    fn test_file() {
+        let file = fs::read_to_string("./inputs/d5_1.txt").unwrap();
+        assert_eq!(486613012, ex1(&file).unwrap());
+        assert_eq!(56931769, ex2(&file).unwrap());
+    }
 }
