@@ -6,7 +6,7 @@ use anyhow::{Error, Result};
 use itertools::Itertools;
 use rangemap::RangeInclusiveMap;
 
-fn fill_rangemap(mut lines: Lines<'_>) -> Result<RangeInclusiveMap<u64, u64>> {
+fn fill_rangemap(lines: &mut Lines<'_>) -> Result<RangeInclusiveMap<u64, u64>> {
     let mut m = RangeInclusiveMap::new();
     loop {
         let l = lines.next();
@@ -49,7 +49,7 @@ fn fill_maps(mut lines: Lines<'_>, maps: &mut [RangeInclusiveMap<u64, u64>; 7]) 
             continue;
         }
         if l.ends_with(':') {
-            maps[index] = fill_rangemap(lines.clone())?;
+            maps[index] = fill_rangemap(&mut lines)?;
             index += 1;
         }
     }

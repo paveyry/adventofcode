@@ -14,7 +14,7 @@ My implementations for advent of code (https://adventofcode.com).
 
 ### AOC 2023 (Intel i7 9th gen)
 
-These benchmarks include parsing time but not file reading for more consistency. File is pre-loaded into memory. 
+These benchmarks include parsing time but not file reading for more consistency. File is pre-loaded into memory.
 
 |    | ex1   | ex2   |
 |----|-------|-------|
@@ -22,5 +22,5 @@ These benchmarks include parsing time but not file reading for more consistency.
 | d2 | 80µs  | 78µs  |
 | d3 | 1.4ms | 520µs |
 | d4 | 230µs | 5.8ms |
-| d5 | 53µs  | 52µs  |
+| d5 | 47µs  | 46µs  |
 
