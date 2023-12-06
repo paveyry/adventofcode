@@ -53,15 +53,15 @@ fn ex2(file: &str) -> Result<u64> {
         .parse::<f64>()?;
 
     let delta_sqrt = (time * time - 4. * distance).sqrt();
-    let mut ceil = ((time - delta_sqrt) / 2.).ceil();
-    let mut floor = ((time + delta_sqrt) / 2.).floor();
-    if ceil * (time - ceil) == distance {
-        ceil += 1.;
+    let mut x1 = ((time - delta_sqrt) / 2.).ceil();
+    let mut x2 = ((time + delta_sqrt) / 2.).floor();
+    if x1 * (time - x1) == distance {
+        x1 += 1.;
     }
-    if floor * (time - floor) == distance {
-        floor -= 1.;
+    if x2 * (time - x2) == distance {
+        x2 -= 1.;
     }
-    Ok((floor - ceil) as u64 + 1)
+    Ok((x2 - x1) as u64 + 1)
 }
 
 fn main() {
