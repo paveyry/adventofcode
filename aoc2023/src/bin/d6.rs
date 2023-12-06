@@ -16,10 +16,10 @@ fn ex1(file: &str) -> Result<u64> {
         .filter_map(Result::ok);
     let distances = lines
         .next()
-        .ok_or_else(|| Error::msg("missing first line"))?
+        .ok_or_else(|| Error::msg("missing second line"))?
         .split(':')
         .nth(1)
-        .ok_or_else(|| Error::msg("bad first line"))?
+        .ok_or_else(|| Error::msg("bad second line"))?
         .split_whitespace()
         .map(str::parse::<u64>)
         .filter_map(Result::ok);
@@ -45,10 +45,10 @@ fn ex2(file: &str) -> Result<u64> {
         .parse::<f64>()?;
     let distance = lines
         .next()
-        .ok_or_else(|| Error::msg("missing first line"))?
+        .ok_or_else(|| Error::msg("missing second line"))?
         .split(':')
         .nth(1)
-        .ok_or_else(|| Error::msg("bad first line"))?
+        .ok_or_else(|| Error::msg("bad second line"))?
         .replace(' ', "")
         .parse::<f64>()?;
 
