@@ -53,9 +53,9 @@ fn ex2(file: &str) -> Result<u64> {
         .parse::<f64>()?;
 
     let delta_sqrt = (time * time - 4. * distance).sqrt();
-    let x1 = ((time - delta_sqrt) / 2.).floor() + 1.;
-    let x2 = ((time + delta_sqrt) / 2.).ceil() - 1.;
-    Ok((x2 - x1) as u64 + 1)
+    let x1 = ((time - delta_sqrt) / 2.).floor();
+    let x2 = ((time + delta_sqrt) / 2.).ceil();
+    Ok((x2 - x1) as u64 - 1) // (x2-1)-(x1+1) + 1
 }
 
 fn main() {
