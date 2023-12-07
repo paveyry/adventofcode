@@ -6,7 +6,7 @@ use std::time::Instant;
 use anyhow::{Error, Result};
 
 #[derive(Debug, PartialEq, Eq, PartialOrd, Ord)]
-enum HandType<const T: bool> {
+enum HandType<const JOKER: bool> {
     HighCard,
     OnePair,
     TwoPair,
@@ -17,12 +17,12 @@ enum HandType<const T: bool> {
 }
 
 #[derive(Debug, PartialEq, Eq)]
-struct Hand<'a, const T: bool> {
-    typ: HandType<T>,
+struct Hand<'a, const JOKER: bool> {
+    typ: HandType<JOKER>,
     cards: &'a str,
 }
 
-impl<'a, const T: bool> PartialOrd for Hand<'a, T> {
+impl<'a, const JOKER: bool> PartialOrd for Hand<'a, JOKER> {
     fn partial_cmp(&self, other: &Self) -> Option<std::cmp::Ordering> {
         if self.typ != other.typ {
             return self.typ.partial_cmp(&other.typ);
@@ -30,7 +30,7 @@ impl<'a, const T: bool> PartialOrd for Hand<'a, T> {
         for (c1, c2) in self.cards.chars().zip(other.cards.chars()) {
             let mut cv1 = card_name_to_value(c1).unwrap();
             let mut cv2 = card_name_to_value(c2).unwrap();
-            if T {
+            if JOKER {
                 cv1 = card_name_value_with_joker(cv1);
                 cv2 = card_name_value_with_joker(cv2);
             }
@@ -46,20 +46,20 @@ impl<'a, const T: bool> PartialOrd for Hand<'a, T> {
     }
 }
 
-impl<'a, const T: bool> Ord for Hand<'a, T> {
+impl<'a, const JOKER: bool> Ord for Hand<'a, JOKER> {
     fn cmp(&self, other: &Self) -> std::cmp::Ordering {
         self.partial_cmp(other).unwrap()
     }
 }
 
-impl<const T: bool> TryFrom<&str> for HandType<T> {
+impl<const JOKER: bool> TryFrom<&str> for HandType<JOKER> {
     type Error = Error;
 
     fn try_from(s: &str) -> Result<Self> {
         let mut hm: HashMap<char, u32> = HashMap::new();
         let mut joker_count = 0;
         s.chars().for_each(|c| {
-            if T && c == 'J' {
+            if JOKER && c == 'J' {
                 joker_count += 1;
             } else {
                 *hm.entry(c).or_default() += 1;
