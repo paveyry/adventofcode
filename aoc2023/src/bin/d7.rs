@@ -1,37 +1,12 @@
 use std::cmp::Ordering;
 use std::collections::{BTreeMap, HashMap};
 use std::fs;
-use std::marker::PhantomData;
 use std::time::Instant;
 
 use anyhow::{Error, Result};
 
-trait Joker {
-    fn joker_enabled() -> bool;
-}
-
-#[derive(PartialEq, Eq, PartialOrd, Ord)]
-struct JokerEnabled {}
-
-impl Joker for JokerEnabled {
-    fn joker_enabled() -> bool {
-        true
-    }
-}
-
-#[derive(PartialEq, Eq, PartialOrd, Ord)]
-struct JokerDisabled {}
-
-impl Joker for JokerDisabled {
-    fn joker_enabled() -> bool {
-        false
-    }
-}
-
-#[allow(dead_code)]
 #[derive(Debug, PartialEq, Eq, PartialOrd, Ord)]
-enum HandType<T: Joker + Eq + Ord> {
-    None(PhantomData<T>),
+enum HandType<const T: bool> {
     HighCard,
     OnePair,
     TwoPair,
@@ -42,12 +17,12 @@ enum HandType<T: Joker + Eq + Ord> {
 }
 
 #[derive(Debug, PartialEq, Eq)]
-struct Hand<'a, T: Joker + Eq + Ord> {
+struct Hand<'a, const T: bool> {
     typ: HandType<T>,
     cards: &'a str,
 }
 
-impl<'a, T: Joker + Eq + Ord> PartialOrd for Hand<'a, T> {
+impl<'a, const T: bool> PartialOrd for Hand<'a, T> {
     fn partial_cmp(&self, other: &Self) -> Option<std::cmp::Ordering> {
         if self.typ != other.typ {
             return self.typ.partial_cmp(&other.typ);
@@ -55,7 +30,7 @@ impl<'a, T: Joker + Eq + Ord> PartialOrd for Hand<'a, T> {
         for (c1, c2) in self.cards.chars().zip(other.cards.chars()) {
             let mut cv1 = card_name_to_value(c1).unwrap();
             let mut cv2 = card_name_to_value(c2).unwrap();
-            if T::joker_enabled() {
+            if T {
                 cv1 = card_name_value_with_joker(cv1);
                 cv2 = card_name_value_with_joker(cv2);
             }
@@ -71,20 +46,20 @@ impl<'a, T: Joker + Eq + Ord> PartialOrd for Hand<'a, T> {
     }
 }
 
-impl<'a, T: Joker + Eq + Ord> Ord for Hand<'a, T> {
+impl<'a, const T: bool> Ord for Hand<'a, T> {
     fn cmp(&self, other: &Self) -> std::cmp::Ordering {
         self.partial_cmp(other).unwrap()
     }
 }
 
-impl<T: Joker + Eq + Ord> TryFrom<&str> for HandType<T> {
+impl<const T: bool> TryFrom<&str> for HandType<T> {
     type Error = Error;
 
     fn try_from(s: &str) -> Result<Self> {
         let mut hm: HashMap<char, u32> = HashMap::new();
         let mut joker_count = 0;
         s.chars().for_each(|c| {
-            if T::joker_enabled() && c == 'J' {
+            if T && c == 'J' {
                 joker_count += 1;
             } else {
                 *hm.entry(c).or_default() += 1;
@@ -149,7 +124,7 @@ fn ex1(file: &str) -> Result<u64> {
     for l in file.lines() {
         let (hand_str, bid_str) = l.split_at(5);
         m.insert(
-            Hand::<JokerDisabled> {
+            Hand::<false> {
                 typ: hand_str.try_into()?,
                 cards: hand_str,
             },
@@ -167,7 +142,7 @@ fn ex2(file: &str) -> Result<u64> {
     for l in file.lines() {
         let (hand_str, bid_str) = l.split_at(5);
         m.insert(
-            Hand::<JokerEnabled> {
+            Hand::<true> {
                 typ: hand_str.try_into()?,
                 cards: hand_str,
             },
