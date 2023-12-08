@@ -25,3 +25,4 @@ These benchmarks include parsing time but not file reading for more consistency.
 | d5 | 47µs  | 46µs  |
 | d6 | 1.5µs | 5.0µs |
 | d7 | 353µs | 362µs |
+| d8 | 325µs | 2.1ms |
