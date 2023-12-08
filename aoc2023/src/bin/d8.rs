@@ -166,6 +166,6 @@ XXX = (XXX, XXX)";
     fn test_file() {
         let file = fs::read_to_string("./inputs/d8_1.txt").unwrap();
         assert_eq!(12643, ex1(&file).unwrap());
-        // assert_eq!(251135960, ex2(&file).unwrap());
+        assert_eq!(13133452426987, ex2(&file).unwrap());
     }
 }
