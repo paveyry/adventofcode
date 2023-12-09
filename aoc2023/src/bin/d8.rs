@@ -2,8 +2,8 @@ use std::collections::HashMap;
 use std::fs;
 use std::time::Instant;
 
-use num::integer::lcm;
 use anyhow::{Error, Result};
+use num::integer::lcm;
 
 enum Instruction {
     Left,
