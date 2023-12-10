@@ -59,7 +59,7 @@ fn ex2(file: &str) -> Result<u64> {
 }
 
 fn main() {
-    let file = fs::read_to_string("./inputs/d6_1.txt").unwrap();
+    let file = fs::read_to_string("./inputs/d06_1.txt").unwrap();
 
     let start = Instant::now();
     let res_ex1 = ex1(&file);
@@ -85,7 +85,7 @@ Distance:  9  40  200";
 
     #[test]
     fn test_file() {
-        let file = fs::read_to_string("./inputs/d6_1.txt").unwrap();
+        let file = fs::read_to_string("./inputs/d06_1.txt").unwrap();
         assert_eq!(1413720, ex1(&file).unwrap());
         assert_eq!(30565288, ex2(&file).unwrap());
     }

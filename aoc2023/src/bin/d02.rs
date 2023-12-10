@@ -111,7 +111,7 @@ fn ex2(file: &str) -> Result<u32> {
 }
 
 fn main() {
-    let file = fs::read_to_string("./inputs/d2_1.txt").unwrap();
+    let file = fs::read_to_string("./inputs/d02_1.txt").unwrap();
 
     let start = Instant::now();
     let res_ex1 = ex1(&file);
@@ -143,7 +143,7 @@ Game 5: 6 red, 1 blue, 3 green; 2 blue, 1 red, 2 green";
 
     #[test]
     fn test_file() {
-        let file = fs::read_to_string("./inputs/d2_1.txt").unwrap();
+        let file = fs::read_to_string("./inputs/d02_1.txt").unwrap();
         assert_eq!(2278, ex1(&file).unwrap());
         assert_eq!(67953, ex2(&file).unwrap());
     }

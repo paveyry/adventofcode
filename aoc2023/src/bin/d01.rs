@@ -99,7 +99,7 @@ fn num_at_pos(s: &str, pos: usize, c: char) -> Option<u32> {
 }
 
 fn main() {
-    let file = fs::read_to_string("./inputs/d1_1.txt").unwrap();
+    let file = fs::read_to_string("./inputs/d01_1.txt").unwrap();
 
     let start = Instant::now();
     let res_ex1 = ex1(&file);
@@ -141,7 +141,7 @@ zoneight234
 
     #[test]
     fn test_file() {
-        let file = fs::read_to_string("./inputs/d1_1.txt").unwrap();
+        let file = fs::read_to_string("./inputs/d01_1.txt").unwrap();
         assert_eq!(54388, ex1(&file).unwrap());
         assert_eq!(53515, ex2(&file).unwrap());
     }

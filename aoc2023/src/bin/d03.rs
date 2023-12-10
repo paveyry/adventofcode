@@ -123,7 +123,7 @@ fn ex2(file: &str) -> Result<u32> {
 }
 
 fn main() {
-    let file = fs::read_to_string("./inputs/d3_1.txt").unwrap();
+    let file = fs::read_to_string("./inputs/d03_1.txt").unwrap();
 
     let start = Instant::now();
     let res_ex1 = ex1(&file);
@@ -160,7 +160,7 @@ mod tests {
 
     #[test]
     fn test_file() {
-        let file = fs::read_to_string("./inputs/d3_1.txt").unwrap();
+        let file = fs::read_to_string("./inputs/d03_1.txt").unwrap();
         assert_eq!(532428, ex1(&file).unwrap());
         assert_eq!(84051670, ex2(&file).unwrap());
     }

@@ -62,7 +62,7 @@ fn ex2(file: &str) -> Result<u32> {
 }
 
 fn main() {
-    let file = fs::read_to_string("./inputs/d4_1.txt").unwrap();
+    let file = fs::read_to_string("./inputs/d04_1.txt").unwrap();
 
     let start = Instant::now();
     let res_ex1 = ex1(&file);
@@ -93,7 +93,7 @@ Card 6: 31 18 13 56 72 | 74 77 10 23 35 67 36 11
 
     #[test]
     fn test_file() {
-        let file = fs::read_to_string("./inputs/d4_1.txt").unwrap();
+        let file = fs::read_to_string("./inputs/d04_1.txt").unwrap();
         assert_eq!(25571, ex1(&file).unwrap());
         assert_eq!(8805731, ex2(&file).unwrap());
     }

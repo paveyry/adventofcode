@@ -119,7 +119,7 @@ fn ex2(file: &str) -> Result<u64> {
 }
 
 fn main() {
-    let file = fs::read_to_string("./inputs/d5_1.txt").unwrap();
+    let file = fs::read_to_string("./inputs/d05_1.txt").unwrap();
 
     let start = Instant::now();
     let res_ex1 = ex1(&file);
@@ -176,7 +176,7 @@ humidity-to-location map:
 
     #[test]
     fn test_file() {
-        let file = fs::read_to_string("./inputs/d5_1.txt").unwrap();
+        let file = fs::read_to_string("./inputs/d05_1.txt").unwrap();
         assert_eq!(486613012, ex1(&file).unwrap());
         assert_eq!(56931769, ex2(&file).unwrap());
     }

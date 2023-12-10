@@ -44,7 +44,7 @@ fn ex2(file: &str) -> Result<i64> {
 }
 
 fn main() {
-    let file = fs::read_to_string("./inputs/d9_1.txt").unwrap();
+    let file = fs::read_to_string("./inputs/d09_1.txt").unwrap();
 
     let start = Instant::now();
     let res_ex1 = ex1(&file);
@@ -71,7 +71,7 @@ mod tests {
 
     #[test]
     fn test_file() {
-        let file = fs::read_to_string("./inputs/d9_1.txt").unwrap();
+        let file = fs::read_to_string("./inputs/d09_1.txt").unwrap();
         assert_eq!(1806615041, ex1(&file).unwrap());
         assert_eq!(1211, ex2(&file).unwrap());
     }
