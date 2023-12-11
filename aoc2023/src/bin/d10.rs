@@ -51,10 +51,11 @@ struct Map {
     m: Vec<Vec<Tile>>,
     height: usize,
     width: usize,
+    start_pos: (usize, usize),
 }
 
 impl Map {
-    fn new(m: Vec<Vec<Tile>>) -> Result<Self> {
+    fn new(m: Vec<Vec<Tile>>, start_pos: (usize, usize)) -> Result<Self> {
         if m.is_empty() || m[0].is_empty() {
             return Err(Error::msg("missing map data"));
         }
@@ -64,7 +65,31 @@ impl Map {
             m,
             height,
             width,
+            start_pos,
         })
+    }
+
+    fn from_file(file: &str) -> Result<Self> {
+        let mut start_pos = (0, 0);
+        let map = Map::new(
+            file.lines()
+                .enumerate()
+                .map(|(i, l)| {
+                    l.chars()
+                        .enumerate()
+                        .map(|(j, c)| {
+                            let t = c.try_into();
+                            if let Ok(Tile::Start) = t {
+                                start_pos = (i, j);
+                            }
+                            t
+                        })
+                        .collect::<Result<Vec<Tile>>>()
+                })
+                .collect::<Result<Vec<_>>>()?,
+            start_pos,
+        )?;
+        Ok(map)
     }
 
     /// Returns the first matching node found, doesn't check if there is a second
@@ -108,63 +133,68 @@ impl Map {
         }
     }
 
-    fn next_node(&self, i: usize, j: usize, prev: Cardinal) -> Option<(usize, usize, Cardinal)> {
-        match self.m[i][j] {
+    fn iter(&self) -> PathIterator {
+        PathIterator {
+            map: self,
+            cur: self.start_pos,
+            prev: Cardinal::default(),
+            first_passed: false,
+        }
+    }
+}
+
+struct PathIterator<'a> {
+    map: &'a Map,
+    cur: (usize, usize),
+    prev: Cardinal,
+    first_passed: bool,
+}
+
+impl<'a> Iterator for PathIterator<'a> {
+    type Item = (usize, usize);
+    fn next(&mut self) -> Option<Self::Item> {
+        let (i, j) = self.cur;
+        if let Some((x, y, prev)) = match self.map.m[i][j] {
             Tile::Ground => None,
-            Tile::Start => self.first_node_from_start(i, j),
-            Tile::Pipe((c1, c2)) => {
-                if c1 == prev {
-                    self.next_from_cardinal(i, j, c2)
-                } else if c2 == prev {
-                    self.next_from_cardinal(i, j, c1)
+            Tile::Start => {
+                if !self.first_passed {
+                    self.first_passed = true;
+                    self.map.first_node_from_start(i, j)
                 } else {
                     None
                 }
             }
+            Tile::Pipe((c1, c2)) => {
+                if c1 == self.prev {
+                    self.map.next_from_cardinal(i, j, c2)
+                } else if c2 == self.prev {
+                    self.map.next_from_cardinal(i, j, c1)
+                } else {
+                    None
+                }
+            }
+        } {
+            self.cur = (x, y);
+            self.prev = prev;
+            Some((x, y))
+        } else {
+            None
         }
     }
 }
 
-fn ex1(file: &str) -> Result<i64> {
-    let mut start_pos = (0, 0);
-    let map = Map::new(
-        file.lines()
-            .enumerate()
-            .map(|(i, l)| {
-                l.chars()
-                    .enumerate()
-                    .map(|(j, c)| {
-                        let t = c.try_into();
-                        if let Ok(Tile::Start) = t {
-                            start_pos = (i, j);
-                        }
-                        t
-                    })
-                    .collect::<Result<Vec<Tile>>>()
-            })
-            .collect::<Result<Vec<_>>>()?,
-    )?;
-    let mut count = 0;
-    let (mut i, mut j) = start_pos;
-    let mut prev_cardinal = Cardinal::default();
-    loop {
-        let n = map.next_node(i, j, prev_cardinal);
-        if let Some((x, y, c)) = n {
-            // println!("({i},{j}, {prev_cardinal:?}) -> ({x}, {y}, {c:?})");
-            if (x, y) == start_pos {
-                return Ok((count + 1) / 2);
-            }
-            i = x;
-            j = y;
-            count += 1;
-            prev_cardinal = c;
-        } else {
-            return Err(Error::msg(format!("node ({i},{j}) didn't find next")));
-        }
-    }
+fn ex1(file: &str) -> Result<usize> {
+    let map = Map::from_file(file)?;
+    Ok(map.iter().count() / 2)
 }
 
 fn ex2(file: &str) -> Result<i64> {
+    let map = Map::from_file(file)?;
+    let mut pth_map = vec![vec![false; map.width]; map.height];
+    for (i, j) in map.iter() {
+        pth_map[i][j] = true;
+    }
+
     Ok(0)
 }
 
