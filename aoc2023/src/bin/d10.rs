@@ -12,6 +12,7 @@ enum Cardinal {
     East,
 }
 
+#[derive(Clone)]
 enum Tile {
     Ground,
     Start,
@@ -183,19 +184,62 @@ impl<'a> Iterator for PathIterator<'a> {
     }
 }
 
+#[allow(dead_code)]
+fn print_path_map(m: &Vec<Vec<bool>>) {
+    let mut s = String::with_capacity(m.len() * (m[0].len() + 1));
+    for l in m {
+        for c in l {
+            if *c {
+                s.push('+');
+            } else {
+                s.push('.');
+            }
+        }
+        s.push('\n');
+    }
+    print!("{s}");
+}
+
 fn ex1(file: &str) -> Result<usize> {
     let map = Map::from_file(file)?;
     Ok(map.iter().count() / 2)
 }
 
-fn ex2(file: &str) -> Result<i64> {
+fn ex2(file: &str) -> Result<usize> {
     let map = Map::from_file(file)?;
     let mut pth_map = vec![vec![false; map.width]; map.height];
     for (i, j) in map.iter() {
         pth_map[i][j] = true;
     }
-
-    Ok(0)
+    let mut count = 0;
+    let mut is_start_northbound = false;
+    if map.start_pos.0 > 0 {
+        if let Tile::Pipe((c1, c2)) = map.m[map.start_pos.0 - 1][map.start_pos.1] {
+            if [c1, c2].contains(&Cardinal::South) {
+                is_start_northbound = true;
+            }
+        }
+    }
+    for (i, l) in pth_map.iter().enumerate() {
+        let mut inside = false;
+        for (j, b) in l.iter().enumerate() {
+            if !*b {
+                if inside {
+                    count += 1;
+                }
+            } else {
+                let n = map.m[i][j].clone();
+                if let Tile::Pipe((c1, c2)) = n {
+                    if [c1, c2].contains(&Cardinal::North) {
+                        inside = !inside
+                    }
+                } else if matches!(Tile::Start, _n) && is_start_northbound {
+                    inside = !inside;
+                }
+            }
+        }
+    }
+    Ok(count)
 }
 
 fn main() {
@@ -229,13 +273,48 @@ SJ.L7
 |F--J
 LJ...";
         assert_eq!(8, ex1(input).unwrap());
-        // assert_eq!(2, ex2(input).unwrap());
+    }
+
+    #[test]
+    fn test_ex2() {
+        let input = "...........
+.S-------7.
+.|F-----7|.
+.||.....||.
+.||.....||.
+.|L-7.F-J|.
+.|..|.|..|.
+.L--J.L--J.
+...........";
+        assert_eq!(4, ex2(input).unwrap());
+        let input = ".F----7F7F7F7F-7....
+.|F--7||||||||FJ....
+.||.FJ||||||||L7....
+FJL7L7LJLJ||LJ.L-7..
+L--J.L7...LJS7F-7L7.
+....F-J..F7FJ|L7L7L7
+....L7.F7||L7|.L7L7|
+.....|FJLJ|FJ|F7|.LJ
+....FJL-7.||.||||...
+....L---J.LJ.LJLJ...";
+        assert_eq!(8, ex2(input).unwrap());
+        let input = "FF7FSF7F7F7F7F7F---7
+L|LJ||||||||||||F--J
+FL-7LJLJ||||||LJL-77
+F--JF--7||LJLJ7F7FJ-
+L---JF-JLJ.||-FJLJJ7
+|F|F-JF---7F7-L7L|7|
+|FFJF7L7F-JF7|JL---7
+7-L-JL7||F7|L7F-7F7|
+L.L7LFJ|||||FJL7||LJ
+L7JLJL-JLJLJL--JLJ.L";
+        assert_eq!(10, ex2(input).unwrap());
     }
 
     #[test]
     fn test_file() {
         let file = fs::read_to_string("./inputs/d10_1.txt").unwrap();
         assert_eq!(6951, ex1(&file).unwrap());
-        // assert_eq!(1211, ex2(&file).unwrap());
+        assert_eq!(563, ex2(&file).unwrap());
     }
 }
