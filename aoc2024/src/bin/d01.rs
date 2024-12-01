@@ -7,22 +7,25 @@ use anyhow::{Context, Result};
 const DAY: &str = "d01";
 
 fn get_lists(file: &str) -> Result<(Vec<i64>, Vec<i64>)> {
-    let mut location_ids_1 = Vec::new();
-    let mut location_ids_2 = Vec::new();
-    for l in file.lines() {
-        let mut split = l.split_ascii_whitespace();
-        let first_elt = split
-            .next()
-            .context("split failed to find 1st value")?
-            .parse::<i64>()?;
-        let second_elt = split
-            .next()
-            .context("split failed to find 1st value")?
-            .parse::<i64>()?;
-        location_ids_1.push(first_elt);
-        location_ids_2.push(second_elt);
-    }
-    Ok((location_ids_1, location_ids_2))
+    file.lines()
+        .map(|l| {
+            let mut split = l.split_ascii_whitespace();
+            (
+                split
+                    .next()
+                    .and_then(|s| s.parse::<i64>().ok())
+                    .context("split failed to get first element"),
+                split
+                    .next()
+                    .and_then(|s| s.parse::<i64>().ok())
+                    .context("split failed to get first element"),
+            )
+        })
+        .try_fold((vec![], vec![]), |(mut prev1, mut prev2), (cur1, cur2)| {
+            prev1.push(cur1?);
+            prev2.push(cur2?);
+            Ok((prev1, prev2))
+        })
 }
 
 fn ex1(file: &str) -> Result<i64> {
