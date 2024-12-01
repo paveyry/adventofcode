@@ -20,11 +20,7 @@ fn get_lists(file: &str) -> Result<(Vec<i64>, Vec<i64>)> {
                 Ok((Err(e), _)) | Ok((_, Err(e))) | Err(e) => Err(e),
             }
         })
-        .try_fold((vec![], vec![]), |(mut prev1, mut prev2), current| {
-            prev1.extend(current.iter().map(|e| e.0));
-            prev2.extend(current.iter().map(|e| e.1));
-            Ok((prev1, prev2))
-        })
+        .collect()
 }
 
 fn ex1(file: &str) -> Result<i64> {
