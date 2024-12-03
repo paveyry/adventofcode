@@ -5,9 +5,6 @@ use regex::Regex;
 
 const DAY: &str = "d03";
 
-const DO: &str = "do";
-const DONT: &str = "don't";
-
 fn ex1(file: &str) -> Result<i64> {
     Regex::new(r"mul\(([0-9]+),([0-9]+)\)")?
         .captures_iter(file)
@@ -20,20 +17,17 @@ fn ex2(file: &str) -> Result<i64> {
     Regex::new(r"(?:mul\(([0-9]+),([0-9]+)\))|(?:(do)\(()\))|(?:(don't)\(()\))")?
         .captures_iter(file)
         .map(|c| c.extract())
-        .fold(Ok((0, true)), |prev, cap| {
-            let (prev_val, do_action) = prev?;
-            match cap.1 {
-                [DO, _] => Ok((prev_val, true)),
-                [DONT, _] => Ok((prev_val, false)),
-                [arg1, arg2] => Ok((
-                    (if do_action {
-                        prev_val + arg1.parse::<i64>()? * arg2.parse::<i64>()?
-                    } else {
-                        prev_val
-                    }),
-                    do_action,
-                )),
-            }
+        .try_fold((0, true), |(prev_val, do_action), cap| match cap.1 {
+            ["do", _] => Ok((prev_val, true)),
+            ["don't", _] => Ok((prev_val, false)),
+            [arg1, arg2] => Ok((
+                (if do_action {
+                    prev_val + arg1.parse::<i64>()? * arg2.parse::<i64>()?
+                } else {
+                    prev_val
+                }),
+                do_action,
+            )),
         })
         .map(|tup| tup.0)
 }
