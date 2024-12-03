@@ -29,7 +29,7 @@ fn ex2(file: &str) -> Result<i64> {
                 do_action,
             )),
         })
-        .map(|tup| tup.0)
+        .map(|(r, _)| r)
 }
 
 fn main() {
