@@ -5,7 +5,7 @@ use itertools::{process_results, Itertools};
 
 const DAY: &str = "d04";
 
-static MAS: &[u8; 3] = &[b'M', b'A', b'S'];
+static MAS: [u8; 3] = [b'M', b'A', b'S'];
 
 struct Matrix(Vec<Vec<u8>>);
 
@@ -37,7 +37,7 @@ impl Matrix {
     }
 
     fn check_xmas_word(&self, p1: Pos, p2: Pos, p3: Pos) -> i64 {
-        if let Some(true) = (|| Some([self.at(p1)?, self.at(p2)?, self.at(p3)?].eq(MAS)))() {
+        if let Some(true) = (|| Some([self.at(p1)?, self.at(p2)?, self.at(p3)?].eq(&MAS)))() {
             1
         } else {
             0
