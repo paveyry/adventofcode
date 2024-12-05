@@ -22,6 +22,28 @@ impl RuleChecker {
             _ => Ordering::Equal,
         }
     }
+
+    fn validate_update(&self, upd: &Update) -> i64 {
+        for (pos, page) in upd.values.iter().enumerate() {
+            if let Some((less_values, greater_values)) = self.0.get(page) {
+                for less_val in less_values {
+                    if let Some(other_pos) = upd.page_pos.get(less_val) {
+                        if *other_pos > pos {
+                            return 0;
+                        }
+                    }
+                }
+                for greater_val in greater_values {
+                    if let Some(other_pos) = upd.page_pos.get(greater_val) {
+                        if *other_pos < pos {
+                            return 0;
+                        }
+                    }
+                }
+            }
+        }
+        upd.middle_value
+    }
 }
 
 struct Update {
@@ -77,34 +99,12 @@ fn parse(file: &str) -> Result<(RuleChecker, Vec<Update>)> {
     Ok((checker, updates))
 }
 
-fn validate_update(upd: &Update, checker: &RuleChecker) -> i64 {
-    for (pos, page) in upd.values.iter().enumerate() {
-        if let Some((less_values, greater_values)) = checker.0.get(page) {
-            for less_val in less_values {
-                if let Some(other_pos) = upd.page_pos.get(less_val) {
-                    if *other_pos > pos {
-                        return 0;
-                    }
-                }
-            }
-            for greater_val in greater_values {
-                if let Some(other_pos) = upd.page_pos.get(greater_val) {
-                    if *other_pos < pos {
-                        return 0;
-                    }
-                }
-            }
-        }
-    }
-    upd.middle_value
-}
-
 fn ex1(file: &str) -> Result<i64> {
     let (checker, updates) = parse(file)?;
 
     Ok(updates
         .into_iter()
-        .map(|upd| validate_update(&upd, &checker))
+        .map(|upd| checker.validate_update(&upd))
         .sum())
 }
 
@@ -113,7 +113,7 @@ fn ex2(file: &str) -> Result<i64> {
 
     Ok(updates
         .into_iter()
-        .filter(|upd| validate_update(upd, &checker) == 0)
+        .filter(|upd| checker.validate_update(upd) == 0)
         .map(|mut upd| {
             upd.values.sort_by(|a, b| checker.compare(*a, *b));
             upd.values[upd.values.len() / 2]
