@@ -25,20 +25,17 @@ impl RuleChecker {
 
     fn validate_update(&self, upd: &Update) -> i64 {
         for (pos, page) in upd.values.iter().enumerate() {
-            if let Some((less_values, greater_values)) = self.0.get(page) {
-                for less_val in less_values {
-                    if let Some(other_pos) = upd.page_pos.get(less_val) {
-                        if *other_pos > pos {
-                            return 0;
-                        }
-                    }
+            let Some((less_values, greater_values)) = self.0.get(page) else {
+                continue;
+            };
+            for less_val in less_values {
+                if let Some(true) = upd.page_pos.get(less_val).map(|other| *other > pos) {
+                    return 0;
                 }
-                for greater_val in greater_values {
-                    if let Some(other_pos) = upd.page_pos.get(greater_val) {
-                        if *other_pos < pos {
-                            return 0;
-                        }
-                    }
+            }
+            for greater_val in greater_values {
+                if let Some(true) = upd.page_pos.get(greater_val).map(|other| *other < pos) {
+                    return 0;
                 }
             }
         }
