@@ -16,15 +16,11 @@ impl RuleChecker {
     }
 
     fn compare(&self, a: i64, b: i64) -> Ordering {
-        if let Some((less_vals, greater_vals)) = self.0.get(&a) {
-            if less_vals.contains(&b) {
-                return Ordering::Greater;
-            }
-            if greater_vals.contains(&b) {
-                return Ordering::Less;
-            }
+        match self.0.get(&a) {
+            Some((less_vals, _)) if less_vals.contains(&b) => Ordering::Greater,
+            Some((_, greater_vals)) if greater_vals.contains(&b) => Ordering::Less,
+            _ => Ordering::Equal,
         }
-        Ordering::Equal
     }
 }
 
@@ -105,6 +101,7 @@ fn validate_update(upd: &Update, checker: &RuleChecker) -> i64 {
 
 fn ex1(file: &str) -> Result<i64> {
     let (checker, updates) = parse(file)?;
+
     Ok(updates
         .into_iter()
         .map(|upd| validate_update(&upd, &checker))
