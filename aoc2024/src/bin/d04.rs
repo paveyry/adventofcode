@@ -49,7 +49,7 @@ impl Matrix {
             + self.check_xmas_word((x - 1, y - 1), (x - 2, y - 2), (x - 3, y - 3))
             + self.check_xmas_word((x - 1, y + 1), (x - 2, y + 2), (x - 3, y + 3))
             + self.check_xmas_word((x + 1, y), (x + 2, y), (x + 3, y))
-            + self.check_xmas_word((x + 1, y-1), (x + 2, y-2), (x + 3, y-3))
+            + self.check_xmas_word((x + 1, y - 1), (x + 2, y - 2), (x + 3, y - 3))
             + self.check_xmas_word((x + 1, y + 1), (x + 2, y + 2), (x + 3, y + 3))
             + self.check_xmas_word((x, y - 1), (x, y - 2), (x, y - 3))
             + self.check_xmas_word((x, y + 1), (x, y + 2), (x, y + 3))
