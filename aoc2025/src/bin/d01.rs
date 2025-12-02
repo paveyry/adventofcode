@@ -69,19 +69,19 @@ L99
 R14
 L82
 ";
-        let expected_ex1: i64 = 3; // FIXME (output from example)
-        let expected_ex2: i64 = 6; // FIXME (output from example)
+        let expected_ex1: i64 = 3;
+        let expected_ex2: i64 = 6;
         assert_eq!(expected_ex1, ex1(example).expect("ex1 failed"));
         assert_eq!(expected_ex2, ex2(example).expect("ex2 failed"));
     }
 
-    // #[test]
-    // fn test_file() {
-    //     let file =
-    //         fs::read_to_string(format!("./inputs/{DAY}_1.txt")).expect("failed to read input file");
-    //     let expected_ex1: i64 = 0; // FIXME (output computed when ex1 passed check)
-    //     let expected_ex2: i64 = 0; // FIXME (output computed when ex1 passed check)
-    //     assert_eq!(expected_ex1, ex1(&file).expect("ex1 failed"));
-    //     assert_eq!(expected_ex2, ex2(&file).expect("ex2 failed"));
-    // }
+    #[test]
+    fn test_file() {
+        let file =
+            fs::read_to_string(format!("./inputs/{DAY}_1.txt")).expect("failed to read input file");
+        let expected_ex1: i64 = 1152;
+        let expected_ex2: i64 = 6671;
+        assert_eq!(expected_ex1, ex1(&file).expect("ex1 failed"));
+        assert_eq!(expected_ex2, ex2(&file).expect("ex2 failed"));
+    }
 }
