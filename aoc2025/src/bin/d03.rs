@@ -29,16 +29,16 @@ fn ex2(file: &str) -> Result<i64> {
         .filter_map(|l| {
             let len = l.len();
             let batteries_iter = l.chars().filter_map(|c| c.to_digit(10));
-            let mut max_ind = -1isize;
+            let mut max_ind = 0;
             let mut chars: [u8; 12] = [0; 12];
             for ind in 1..=12 {
                 let max = batteries_iter
                     .clone()
                     .enumerate()
                     .take(len - (12 - ind))
-                    .skip((max_ind + 1) as usize)
+                    .skip(if ind == 1 { 0 } else { max_ind + 1 })
                     .first_max_by_key(|(_idx, val)| *val)?;
-                max_ind = max.0 as isize;
+                max_ind = max.0;
                 chars[ind - 1] = char::from_digit(max.1, 10)? as u8;
             }
             str::from_utf8(&chars).ok()?.parse::<i64>().ok()

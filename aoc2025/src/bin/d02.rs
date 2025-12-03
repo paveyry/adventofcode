@@ -38,6 +38,7 @@ fn ex2(file: &str) -> Result<i64> {
                                 != s[(k + 1) * slicelen..(k + 2) * slicelen]
                             {
                                 ok = false;
+                                break;
                             }
                         }
                         if ok {
