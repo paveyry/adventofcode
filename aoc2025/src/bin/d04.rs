@@ -26,18 +26,17 @@ fn grid_to_coord_set(grid: &[Vec<bool>]) -> HashSet<(isize, isize)> {
 
 fn ex1(file: &str) -> Result<i64> {
     let set = grid_to_coord_set(parse_grid(file).as_ref());
-    let mut count = 0;
-    for (x, y) in set.iter() {
-        let neighbours = (x - 1..=x + 1)
-            .flat_map(|i| (y - 1..=y + 1).map(move |j| (i, j)))
-            .filter(|(i, j)| (i, j) != (x, y) && set.contains(&(*i, *j)))
-            .count();
-        if neighbours < 4 {
-            count += 1;
-        }
-    }
-
-    Ok(count)
+    let count = set
+        .iter()
+        .filter(|(x, y)| {
+            (x - 1..=x + 1)
+                .flat_map(|i| (y - 1..=y + 1).map(move |j| (i, j)))
+                .filter(|(i, j)| (i, j) != (x, y) && set.contains(&(*i, *j)))
+                .count()
+                < 4
+        })
+        .count();
+    Ok(count as i64)
 }
 
 fn ex2(file: &str) -> Result<i64> {
