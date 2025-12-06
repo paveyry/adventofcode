@@ -63,37 +63,40 @@ fn ex2(file: &str) -> Result<i64> {
 
     let nums_lines: Vec<&[u8]> = iter.rev().map(|l| l.as_bytes()).collect();
 
-    let nums_max_length = nums_lines.len();
-    let mut num_vec: Vec<u8> = Vec::with_capacity(nums_max_length);
-
-    let mut sum = 0;
-    for (i, (str_ind, op)) in ops.iter().enumerate() {
-        let end = if i == ops.len() - 1 {
-            nums_lines[0].len()
-        } else {
-            ops[i + 1].0 - 1
-        };
-        let mut local_result = match op {
-            Operation::Addition => 0,
-            Operation::Multiplication => 1,
-        };
-        for pos in *str_ind..end {
-            num_vec.clear();
-            for line in nums_lines.iter() {
-                if !line[pos].is_ascii_digit() {
-                    continue;
-                }
-                num_vec.push(line[pos]);
-            }
-            let built_num = str::from_utf8(&num_vec)?.parse::<i64>()?;
-            if matches![op, Operation::Addition] {
-                local_result += built_num;
+    let sum = ops
+        .iter()
+        .enumerate()
+        .map(|(i, (start_index, op))| {
+            let end_index = if i == ops.len() - 1 {
+                nums_lines[0].len()
             } else {
-                local_result *= built_num;
+                ops[i + 1].0 - 1
+            };
+            let nums_iter = (*start_index..end_index).filter_map(|pos| {
+                let built_num = str::from_utf8(
+                    nums_lines
+                        .iter()
+                        .filter_map(|line| {
+                            if line[pos].is_ascii_digit() {
+                                Some(line[pos])
+                            } else {
+                                None
+                            }
+                        })
+                        .collect::<Vec<u8>>()
+                        .as_slice(),
+                )
+                .ok()?
+                .parse::<i64>()
+                .ok()?;
+                Some(built_num)
+            });
+            match op {
+                Operation::Addition => nums_iter.sum::<i64>(),
+                Operation::Multiplication => nums_iter.product::<i64>(),
             }
-        }
-        sum += local_result;
-    }
+        })
+        .sum();
     Ok(sum)
 }
 
