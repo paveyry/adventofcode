@@ -28,18 +28,16 @@ fn ex1(file: &str) -> Result<i64> {
     let mut split_count = 0;
     for row in grid.iter() {
         let cur_rays = rays.clone();
-        for ray in cur_rays {
-            if row[ray] {
-                rays.remove(&ray);
-                if ray > 0 {
-                    rays.insert(ray - 1);
-                }
-                if ray < row.len() - 1 {
-                    rays.insert(ray + 1);
-                }
-                split_count += 1;
+        cur_rays.iter().filter(|ray| row[**ray]).for_each(|ray| {
+            rays.remove(&ray);
+            if *ray > 0 {
+                rays.insert(ray - 1);
             }
-        }
+            if *ray < row.len() - 1 {
+                rays.insert(ray + 1);
+            }
+            split_count += 1;
+        });
     }
     Ok(split_count)
 }
@@ -51,17 +49,18 @@ fn ex2(file: &str) -> Result<i64> {
 
     for row in grid.iter() {
         let cur_rays = rays.clone();
-        for (ray, timelines) in cur_rays {
-            if row[ray] {
-                rays.remove(&ray);
-                if ray > 0 {
+        cur_rays
+            .iter()
+            .filter(|(ray, _)| row[**ray])
+            .for_each(|(ray, timelines)| {
+                rays.remove(ray);
+                if *ray > 0 {
                     *rays.entry(ray - 1).or_default() += timelines;
                 }
-                if ray < row.len() - 1 {
+                if *ray < row.len() - 1 {
                     *rays.entry(ray + 1).or_default() += timelines;
                 }
-            }
-        }
+            });
     }
     Ok(rays.values().sum::<i64>())
 }
