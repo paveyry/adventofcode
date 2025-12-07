@@ -55,14 +55,10 @@ fn ex2(file: &str) -> Result<i64> {
             if row[ray] {
                 rays.remove(&ray);
                 if ray > 0 {
-                    rays.entry(ray - 1)
-                        .and_modify(|tl| *tl += timelines)
-                        .or_insert(timelines);
+                    *rays.entry(ray - 1).or_default() += timelines;
                 }
                 if ray < row.len() - 1 {
-                    rays.entry(ray + 1)
-                        .and_modify(|tl| *tl += timelines)
-                        .or_insert(timelines);
+                    *rays.entry(ray + 1).or_default() += timelines;
                 }
             }
         }
