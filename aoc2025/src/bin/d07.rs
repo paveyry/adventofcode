@@ -29,7 +29,7 @@ fn ex1(file: &str) -> Result<i64> {
     for row in grid.iter() {
         let cur_rays = rays.clone();
         cur_rays.iter().filter(|ray| row[**ray]).for_each(|ray| {
-            rays.remove(&ray);
+            rays.remove(ray);
             if *ray > 0 {
                 rays.insert(ray - 1);
             }
