@@ -65,7 +65,7 @@ impl std::fmt::Display for TilePair {
 fn parse_input(file: &str) -> Result<Vec<Tile>> {
     file.lines()
         .filter_map(|l| l.split_once(","))
-        .map(|(x, y)| Ok(Tile::new(x.parse::<i64>()?, y.parse::<i64>()?)))
+        .map(|(x, y)| Ok(Tile::new(x.parse()?, y.parse()?)))
         .collect()
 }
 
@@ -104,31 +104,32 @@ fn ex2(file: &str) -> Result<i64> {
         .sorted_by(|a, b| b.1.cmp(&a.1))
         .collect::<Vec<_>>();
 
-    for (rect, area) in areas_vec {
-        let mut intersects_with_segment = false;
-        for (t1, t2) in tiles.iter().tuple_windows() {
-            let (rxmin, rxmax, rymin, rymax) = rect.rect_coordinates();
-            if t1.x == t2.x {
-                let ymin = min(t1.y, t2.y);
-                let ymax = max(t1.y, t2.y);
-                if ymin < rymax && ymax > rymin && t1.x > rxmin && t1.x < rxmax {
-                    intersects_with_segment = true;
-                    break;
+    let (_, area) = areas_vec
+        .iter()
+        .find(|(rect, _)| {
+            !tiles.iter().tuple_windows().any(|(t1, t2)| {
+                let (rxmin, rxmax, rymin, rymax) = rect.rect_coordinates();
+                if t1.x == t2.x {
+                    let ymin = min(t1.y, t2.y);
+                    let ymax = max(t1.y, t2.y);
+                    if ymin < rymax && ymax > rymin && t1.x > rxmin && t1.x < rxmax {
+                        // intersects with segment
+                        return true;
+                    }
+                } else {
+                    let xmin = min(t1.x, t2.x);
+                    let xmax = max(t1.x, t2.x);
+                    if xmin < rxmax && xmax > rxmin && t1.y > rymin && t1.y < rymax {
+                        // intersects with segment
+                        return true;
+                    }
                 }
-            } else {
-                let xmin = min(t1.x, t2.x);
-                let xmax = max(t1.x, t2.x);
-                if xmin < rxmax && xmax > rxmin && t1.y > rymin && t1.y < rymax {
-                    intersects_with_segment = true;
-                    break;
-                }
-            }
-        }
-        if !intersects_with_segment {
-            return Ok(area);
-        }
-    }
-    panic!("failed to find working rectangle");
+                false
+            })
+        })
+        .context("failed to find rectangle which does not intersect with any segment")?;
+
+    Ok(*area)
 }
 
 fn main() {
